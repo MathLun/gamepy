@@ -2,20 +2,42 @@ import pygame
 
 pygame.init()
 
-display_width = 400
-display_height = 400
-display_size = display_width, display_height
+class Ball:
+    def __init__(self, img):
+        self.img = img
 
-black = (0, 0, 0)
-white = (255, 255, 255)
-screen = pygame.display.set_mode(display_size)
+    def loadImage(self):
+        return pygame.image.load(self.img)
 
-ballImg = pygame.image.load('soccer_ball.png')
-def ball(x,y):
-    screen.blit(ballImg, (x,y))
+    def position(self, screen, game_width, game_height):
+        x = (game_width * 0.45)
+        y = (game_height * 0.8)
+        return screen.blit(self.loadImage(), (x,y))
 
-x = (display_width * 0.90)
-y = (display_height * 0.7)
+class Game:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+
+    def render(self):
+        display_size = self.width, self.height
+        return pygame.display.set_mode(display_size)
+    
+
+
+black_color = (0, 0, 0)
+
+display_width = 800
+display_height = 600
+game = Game(display_width, display_height)
+screen = game.render()
+
+image = 'assets/soccer_ball.png'
+ball = Ball(image)
+
+game_width = display_width
+game_height = display_height
+position_ball = ball.position(screen, game_width, game_height)
 
 clock = pygame.time.Clock()
 crashed = False
@@ -25,8 +47,10 @@ while not crashed:
         if event.type == pygame.QUIT:
             crashed = True
 
-    screen.fill(black)
-    ball(x,y)
+    
+    screen.fill(black_color)
+    
+    position_ball
 
     pygame.display.update()
     clock.tick(60)
