@@ -1,30 +1,11 @@
 import pygame
 
+from ball import Ball
+from game import Game
+
 pygame.init()
 
-class Ball:
-    def __init__(self, img):
-        self.img = img
-
-    def loadImage(self):
-        return pygame.image.load(self.img)
-
-    def position(self, screen, game_width, game_height):
-        x = (game_width * 0.45)
-        y = (game_height * 0.8)
-        return screen.blit(self.loadImage(), (x,y))
-
-class Game:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
-
-    def render(self):
-        display_size = self.width, self.height
-        return pygame.display.set_mode(display_size)
-    
-
-
+white_color = (255, 255, 255)
 black_color = (0, 0, 0)
 
 display_width = 800
@@ -32,28 +13,49 @@ display_height = 600
 game = Game(display_width, display_height)
 screen = game.render()
 
-image = 'assets/soccer_ball.png'
-ball = Ball(image)
+ball_width = 73
+ball_image = 'assets/ball.png'
+ball = Ball(ball_image)
 
 game_width = display_width
 game_height = display_height
-position_ball = ball.position(screen, game_width, game_height)
 
 clock = pygame.time.Clock()
-crashed = False
 
-while not crashed:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            crashed = True
+def game_loop():
+    x = (game_width * 0.45)
+    y = (game_height * 0.8)
 
+    x_change = 0
     
-    screen.fill(black_color)
-    
-    position_ball
+    gameExit = False
 
-    pygame.display.update()
-    clock.tick(60)
+    while not gameExit:
 
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.exit()
+                quit()
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    x_change = -5
+                elif event.key == pygame.K_RIGHT:
+                    x_change = 5
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+                    x_change = 0
+
+        x += x_change
+        screen.fill(white_color)
+        ball.position(screen, game_width, game_height, x, y)
+
+        if x > display_width - ball_width or x < 0:
+            gameExit = True
+
+        pygame.display.update()
+        clock.tick(60)
+
+game_loop()
 pygame.quit()
 quit()
